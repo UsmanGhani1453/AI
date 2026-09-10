@@ -1,0 +1,68 @@
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+.env.*
+
+# =========================
+# Hugging Face & Model Cache
+# =========================
+.cache/
+huggingface/
+**/.cache/
+
+# Local downloaded models (keep scripts, ignore weights)
+models/
+
+# =========================
+# Training Outputs
+# =========================
+training/output/
+training/output/checkpoint-*/
+
+# Optional: keep folder structure
+!training/output/.gitkeep
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.temp
