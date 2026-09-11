@@ -1,0 +1,51 @@
+# Modelfile
+#
+# Ollama build file for the fine-tuned truck-dispatch correspondence
+# model. See deployment/README.md for the full conversion pipeline
+# that produces the GGUF file this points to.
+#
+# Build with (from the project root):
+#   ollama create truck-dispatch-ai -f deployment/Modelfile
+#
+# Then run with:
+#   ollama run truck-dispatch-ai
+
+# Path to the quantized (or fp16) GGUF file produced by the conversion
+# steps in deployment/README.md. Adjust the filename if you used a
+# different quantization level.
+FROM ../models/gguf/truck-dispatch-q4_k_m.gguf
+
+# Default persona. Ollama lets you override this per-chat with /set
+# system "...", or per request via the API's "system" field — useful
+# for switching between the cold-outreach and general-correspondence
+# personas the model was trained on.
+SYSTEM """You are a professional cold outreach email writer for a truck dispatching service. Write clear, courteous, and fully professional emails and responses. Use correct grammar and punctuation at all times. Do not make unsupported claims. Do not use aggressive sales language, slang, or casual phrasing."""
+
+# Sampling defaults, matched to training/inference.py so behavior is
+# consistent between the Python test script and the deployed model.
+PARAMETER temperature 0.7
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.1
+PARAMETER num_ctx 4096
+
+# --------------------------------------------------------------
+# Chat template
+# --------------------------------------------------------------
+# llama.cpp's conversion script embeds the tokenizer's chat template
+# into the GGUF file's metadata, and current Ollama versions use that
+# embedded template automatically — so in most cases you do NOT need
+# the TEMPLATE block below.
+#
+# If responses come out malformed (missing turns, stray special
+# tokens, etc.), uncomment the ChatML-style template below, which
+# matches Qwen3-Instruct's format, and rebuild with `ollama create`.
+
+# TEMPLATE """{{ if .System }}<|im_start|>system
+# {{ .System }}<|im_end|>
+# {{ end }}{{ if .Prompt }}<|im_start|>user
+# {{ .Prompt }}<|im_end|>
+# {{ end }}<|im_start|>assistant
+# {{ .Response }}<|im_end|>
+# """
+# PARAMETER stop "<|im_start|>"
+# PARAMETER stop "<|im_end|>"
